@@ -60,6 +60,7 @@ resource "terraform_data" "vnet_peering_tohub_syncrequired" {
 }
 
 resource "azapi_resource_action" "vnet_peering_tohub_sync" {
+  # https://github.com/Azure/azure-rest-api-specs/blob/79e4e0c9f8e1c134bcda069fc7994fd99599ccdc/specification/network/resource-manager/Microsoft.Network/stable/2023-09-01/virtualNetwork.json#L1047-L1058
   resource_id = "${azapi_resource.vnet_peering_tohub.id}?syncRemoteAddressSpace=true"
   type        = "Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2023-09-01"
   method      = "PUT"
