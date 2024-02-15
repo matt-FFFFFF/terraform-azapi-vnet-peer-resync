@@ -12,7 +12,7 @@ resource "azapi_resource" "vnet_spoke" {
   body = jsonencode({
     properties = {
       addressSpace = {
-        addressPrefixes = ["10.0.0.0/24", ]
+        addressPrefixes = ["10.0.0.0/24", "10.0.1.0/24"]
       }
     }
   })

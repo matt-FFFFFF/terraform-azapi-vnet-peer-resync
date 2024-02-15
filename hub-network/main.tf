@@ -12,7 +12,7 @@ resource "azapi_resource" "vnet_hub" {
   body = jsonencode({
     properties = {
       addressSpace = {
-        addressPrefixes = ["192.168.0.0/16", ]
+        addressPrefixes = ["192.168.0.0/16", "172.16.0.0/16"]
       }
     }
   })
