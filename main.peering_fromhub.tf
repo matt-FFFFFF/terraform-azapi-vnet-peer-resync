@@ -6,22 +6,13 @@ resource "azapi_resource" "vnet_peering_fromhub" {
   body      = local.vnet_peering_fromhub_body
 }
 
-# azapi_resource_action.vnet_peering_fromhub_data is triggered by the spoke network being updated.
-# It gets the peeringSyncLevel property from the virtual network peering.
-resource "azapi_resource_action" "vnet_peering_fromhub_data" {
-  resource_id            = azapi_resource.vnet_peering_fromhub.id
-  type                   = "Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2023-09-01"
-  response_export_values = ["properties.peeringSyncLevel"]
-  method                 = "GET"
+# trusty time_sleep to wait for the spoke update to reconcile.
+resource "time_sleep" "after_spoke_vnet_update" {
+  create_duration = "20s"
+  depends_on      = [azapi_resource.vnet_spoke]
   lifecycle {
     replace_triggered_by = [azapi_resource.vnet_spoke]
   }
-}
-
-# terraform_data.vnet_peering_fromhub_sync_required is set to either true of false, depending on whether the
-# peeringSyncLevel property is LocalNotInSync.
-resource "terraform_data" "vnet_peering_fromhub_sync_required" {
-  input = jsondecode(azapi_resource_action.vnet_peering_fromhub_data.output).properties.peeringSyncLevel == "LocalNotInSync"
 }
 
 # azapi_resource_action.vnet_peering_fromhub_sync is triggered by terraform_data.vnet_peering_fromhub_sync_required resource
@@ -32,6 +23,6 @@ resource "azapi_resource_action" "vnet_peering_fromhub_sync" {
   method      = "PUT"
   body        = local.vnet_peering_fromhub_body
   lifecycle {
-    replace_triggered_by = [terraform_data.vnet_peering_fromhub_sync_required]
+    replace_triggered_by = [time_sleep.after_spoke_vnet_update]
   }
 }

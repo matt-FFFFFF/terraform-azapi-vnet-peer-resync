@@ -1,5 +1,5 @@
 locals {
-  hub_vnet_resource_id = "/subscriptions/57934baa-70ec-4d1a-95e0-3799a838811f/resourceGroups/rg-peerresync-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"
+  hub_vnet_resource_id = "/subscriptions/d5ffd04f-25c8-4494-a5de-4e1c707bf600/resourceGroups/rg-peerresync-hub/providers/Microsoft.Network/virtualNetworks/vnet-hub"
   vnet_peering_tohub_body = jsonencode({
     properties = {
       allowVirtualNetworkAccess = true,
